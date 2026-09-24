@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
@@ -70,8 +70,8 @@ export default function Login() {
         </form>
 
         <p className="auth-links">
-          New here? <a href="/register/student">Register as Student</a> ·{" "}
-          <a href="/register/technician">Register as Technician</a>
+          New here? <Link to="/register/student">Register as Student</Link> ·{" "}
+          <Link to="/register/technician">Register as Technician</Link>
         </p>
       </div>
     </div>
