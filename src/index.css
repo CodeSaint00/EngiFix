@@ -619,11 +619,6 @@ select.auth-input option {
   font-size: 14px;
   cursor: pointer;
   transition: opacity 0.15s ease;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
 }
 
 .auth-btn:hover {
