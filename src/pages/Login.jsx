@@ -6,39 +6,47 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       await login(username, password);
       navigate("/dashboard");
     } catch {
       setError("Invalid username or password");
+      setLoading(false);
     }
   };
 
   return (
     <div className="auth-page">
       <div className="auth-page-bg"></div>
-      <button
-        className="auth-back-btn"
-        onClick={() => navigate(-1)}
-        aria-label="Go back"
-      >
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M16 4L8 12L16 20"
-            stroke="#2FA8FF"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
       <div className="auth-card">
+        <button
+          className="auth-back-btn"
+          onClick={() => navigate(-1)}
+          aria-label="Go back"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M16 4L8 12L16 20"
+              stroke="#2FA8FF"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+
         <h1 className="auth-brand">EngiFix</h1>
         <p className="auth-subtitle">Detect. Report. Repair.</p>
 
@@ -64,8 +72,26 @@ export default function Login() {
             />
           </div>
           {error && <p className="auth-error">{error}</p>}
-          <button type="submit" className="auth-btn">
-            Log In
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? (
+              <>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <path
+                    d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Logging in...
+              </>
+            ) : (
+              "Log In"
+            )}
           </button>
         </form>
 

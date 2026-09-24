@@ -619,12 +619,27 @@ select.auth-input option {
   font-size: 14px;
   cursor: pointer;
   transition: opacity 0.15s ease;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .auth-btn:hover {
   opacity: 0.9;
 }
 
+.auth-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-btn svg {
+  width: 16px;
+  height: 16px;
+  animation: spin 1.1s linear infinite;
+}
 .auth-links {
   text-align: center;
   margin-top: 18px;
@@ -780,6 +795,10 @@ select.auth-input option {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
