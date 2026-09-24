@@ -11,7 +11,7 @@ export default function RegisterStudent() {
     department: "",
     reg_number: "",
   });
-  const [departments, setDepartments] = useState([]);
+  const [departmentInput, setDepartmentInput] = useState([]);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -25,8 +25,23 @@ export default function RegisterStudent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+
+    const matchedDept = departments.find(
+      (d) =>
+        d.name.toLowerCase().trim() === departmentInput.toLowerCase().trim(),
+    );
+    if (!matchedDept) {
+      setErrors({
+        department: "Please select a valid department from the list.",
+      });
+      return;
+    }
+
     try {
-      await api.post("register/student/", form);
+      await api.post("register/student/", {
+        ...form,
+        department: matchedDept.id,
+      });
       alert("Registration successful! You can now log in.");
       navigate("/login");
     } catch (err) {
@@ -87,19 +102,19 @@ export default function RegisterStudent() {
           </div>
           <div className="auth-field">
             <label>Department</label>
-            <select
+            <input
               className="auth-input"
-              name="department"
-              onChange={handleChange}
+              list="department-options"
+              placeholder="Start typing your department..."
+              value={departmentInput}
+              onChange={(e) => setDepartmentInput(e.target.value)}
               required
-            >
-              <option value="">-- Select Department --</option>
+            />{/* 
+            <datalist id="department-options">
               {departments.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
+                <option key={d.id} value={d.name} />
               ))}
-            </select>
+            </datalist> */}
           </div>
           <div className="auth-field">
             <label>Registration Number</label>

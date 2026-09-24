@@ -26,27 +26,22 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-page-bg"></div>
+      <button
+        className="auth-back-btn"
+        onClick={() => navigate(-1)}
+        aria-label="Go back"
+      >
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M16 4L8 12L16 20"
+            stroke="#2FA8FF"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
       <div className="auth-card">
-        <button
-          className="auth-back-btn"
-          onClick={() => navigate(-1)}
-          aria-label="Go back"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M16 4L8 12L16 20"
-              stroke="#2FA8FF"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-
         <h1 className="auth-brand">EngiFix</h1>
         <p className="auth-subtitle">Detect. Report. Repair.</p>
 

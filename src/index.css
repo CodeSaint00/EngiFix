@@ -504,6 +504,7 @@ h3,
   overflow: hidden;
   opacity: 0;
   animation: cardFadeIn 0.9s ease-out 0.4s forwards;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 @keyframes cardFadeIn {
