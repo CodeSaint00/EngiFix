@@ -11,13 +11,42 @@ export default function RegisterStudent() {
     department: "",
     reg_number: "",
   });
-  const [departmentInput, setDepartmentInput] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [departmentInput, setDepartmentInput] = useState("");
+  const [departmentId, setDepartmentId] = useState("");
+  const [showDeptDropdown, setShowDeptDropdown] = useState(false);
+  const [addingDept, setAddingDept] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
     api.get("departments/").then((res) => setDepartments(res.data));
   }, []);
+
+  const filteredDepartments = departments.filter((d) =>
+    d.name.toLowerCase().includes(departmentInput.toLowerCase()),
+  );
+
+  const selectDepartment = (dept) => {
+    setDepartmentInput(dept.name);
+    setDepartmentId(dept.id);
+    setShowDeptDropdown(false);
+  };
+
+  const handleAddDepartment = async () => {
+    setAddingDept(true);
+    try {
+      const res = await api.post("departments/", {
+        name: departmentInput.trim(),
+      });
+      setDepartments((prev) => [...prev, res.data]);
+      selectDepartment(res.data);
+    } catch (err) {
+      setErrors({ department: "Couldn't add that department. Try again." });
+    } finally {
+      setAddingDept(false);
+    }
+  };
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,21 +55,15 @@ export default function RegisterStudent() {
     e.preventDefault();
     setErrors({});
 
-    const matchedDept = departments.find(
-      (d) =>
-        d.name.toLowerCase().trim() === departmentInput.toLowerCase().trim(),
-    );
-    if (!matchedDept) {
-      setErrors({
-        department: "Please select a valid department from the list.",
-      });
+    if (!departmentId) {
+      setErrors({ department: "Please select or add a department." });
       return;
     }
 
     try {
       await api.post("register/student/", {
         ...form,
-        department: matchedDept.id,
+        department: departmentId,
       });
       alert("Registration successful! You can now log in.");
       navigate("/login");
@@ -100,21 +123,46 @@ export default function RegisterStudent() {
               required
             />
           </div>
-          <div className="auth-field">
-            <label>Department</label>
+          <div className="auth-field dropdown-wrapper">
+            <label>Faculty</label>
             <input
               className="auth-input"
-              list="department-options"
               placeholder="Start typing your department..."
               value={departmentInput}
-              onChange={(e) => setDepartmentInput(e.target.value)}
+              onChange={(e) => {
+                setDepartmentInput(e.target.value);
+                setDepartmentId("");
+                setShowDeptDropdown(true);
+              }}
+              onFocus={() => setShowDeptDropdown(true)}
+              onBlur={() => setTimeout(() => setShowDeptDropdown(false), 150)}
               required
-            />{/* 
-            <datalist id="department-options">
-              {departments.map((d) => (
-                <option key={d.id} value={d.name} />
-              ))}
-            </datalist> */}
+            />
+            {showDeptDropdown && departmentInput && (
+              <div className="dropdown-list">
+                {filteredDepartments.map((d) => (
+                  <div
+                    key={d.id}
+                    className="dropdown-item"
+                    onMouseDown={() => selectDepartment(d)}
+                  >
+                    {d.name}
+                  </div>
+                ))}
+                {!filteredDepartments.some(
+                  (d) => d.name.toLowerCase() === departmentInput.toLowerCase(),
+                ) && (
+                  <div
+                    className="dropdown-add-item"
+                    onMouseDown={handleAddDepartment}
+                  >
+                    {addingDept
+                      ? "Adding..."
+                      : `+ Add "${departmentInput}" as new department`}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <div className="auth-field">
             <label>Registration Number</label>

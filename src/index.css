@@ -798,3 +798,45 @@ select.auth-input option {
     transform: rotate(360deg);
   }
 }
+
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  background: rgba(10, 14, 26, 0.92);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  backdrop-filter: blur(20px);
+  z-index: 10;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-item {
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dropdown-add-item {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--accent-blue);
+  cursor: pointer;
+  border-top: 1px solid var(--border-glass);
+}
+
+.dropdown-add-item:hover {
+  background: rgba(47, 168, 255, 0.1);
+}
