@@ -840,3 +840,24 @@ select.auth-input option {
 .dropdown-add-item:hover {
   background: rgba(47, 168, 255, 0.1);
 }
+
+.role-badge {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.role-admin {
+  background: #4f46e5;
+  color: white;
+}
+.role-technician {
+  background: #059669;
+  color: white;
+}
+.role-student {
+  background: #6b7280;
+  color: white;
+}

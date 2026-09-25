@@ -184,7 +184,12 @@ export default function Dashboard() {
       <div className="dash-page-bg"></div>
       <div className="dash-header">
         <div>
-          <p className="dash-greeting">Hi, {user?.username} 👋</p>
+          <p className="dash-greeting">
+            Hi, {user?.username} 👋
+            <span className={`role-badge role-${user?.role?.toLowerCase()}`}>
+              {user?.role}
+            </span>
+          </p>
           <h1 className="dash-title">
             {user?.role === "TECHNICIAN" ? "My Assigned Jobs" : "Fault Reports"}
           </h1>
