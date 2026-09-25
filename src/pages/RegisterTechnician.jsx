@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
+import LoadingButton from "../components/LoadingButton";
 
 export default function RegisterTechnician() {
   const [form, setForm] = useState({
@@ -13,6 +14,7 @@ export default function RegisterTechnician() {
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -20,6 +22,7 @@ export default function RegisterTechnician() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    setLoading(true);
     try {
       await api.post("register/technician/", form);
       alert(
@@ -28,6 +31,8 @@ export default function RegisterTechnician() {
       navigate("/login");
     } catch (err) {
       setErrors(err.response?.data || { detail: "Registration failed." });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,9 +120,13 @@ export default function RegisterTechnician() {
             </p>
           ))}
 
-          <button type="submit" className="auth-btn">
+          <LoadingButton
+            type="submit"
+            loading={loading}
+            loadingText="Registering..."
+          >
             Register
-          </button>
+          </LoadingButton>
         </form>
 
         <p className="auth-links">
