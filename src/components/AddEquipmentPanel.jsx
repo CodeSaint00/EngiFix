@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../api/axios";
+import LoadingButton from "./LoadingButton";
 
 const CATEGORY_OPTIONS = [
   "Electrical Fault",
@@ -19,6 +20,7 @@ export default function AddEquipmentPanel({ locations, onCreated }) {
     location: "",
   });
   const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,6 +28,7 @@ export default function AddEquipmentPanel({ locations, onCreated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    setSubmitting(true);
     try {
       await api.post("equipment/", {
         ...form,
@@ -41,6 +44,8 @@ export default function AddEquipmentPanel({ locations, onCreated }) {
       onCreated();
     } catch (err) {
       setErrors(err.response?.data || {});
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -127,9 +132,9 @@ export default function AddEquipmentPanel({ locations, onCreated }) {
         </p>
       ))}
 
-      <button type="submit" className="auth-btn">
+      <LoadingButton type="submit" loading={submitting} loadingText="Saving...">
         Save Equipment
-      </button>
+      </LoadingButton>
     </form>
   );
 }

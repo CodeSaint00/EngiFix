@@ -127,7 +127,7 @@ export default function RegisterStudent() {
             <label>Faculty</label>
             <input
               className="auth-input"
-              placeholder="Start typing your department..."
+              placeholder="Start typing your Faculty..."
               value={departmentInput}
               onChange={(e) => {
                 setDepartmentInput(e.target.value);

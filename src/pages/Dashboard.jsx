@@ -3,6 +3,7 @@ import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import AddEquipmentPanel from "../components/AddEquipmentPanel";
 import NavBar from "../components/NavBar";
+import LoadingButton from "../components/LoadingButton";
 
 const STATUS_FILTERS_ALL = [
   "ALL",
@@ -66,6 +67,8 @@ export default function Dashboard() {
   const [showEquipmentModal, setShowEquipmentModal] = useState(false);
   const [showTechnicians, setShowTechnicians] = useState(false);
   const [loadingFaults, setLoadingFaults] = useState(true);
+  const [submittingReport, setSubmittingReport] = useState(false);
+  const [verifyingId, setVerifyingId] = useState(null);
 
   const loadFaults = async () => {
     setLoadingFaults(true);
@@ -130,18 +133,25 @@ export default function Dashboard() {
 
   const handleSubmitReport = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("equipment", equipmentId);
-    formData.append("description", description);
-    formData.append("priority", priority);
-    if (imageFile) formData.append("image", imageFile);
+    setSubmittingReport(true);
+    try {
+      const formData = new FormData();
+      formData.append("equipment", equipmentId);
+      formData.append("description", description);
+      formData.append("priority", priority);
+      if (imageFile) formData.append("image", imageFile);
 
-    await api.post("faults/", formData);
-    setDescription("");
-    setEquipmentId("");
-    setImageFile(null);
-    setShowReportForm(false);
-    loadFaults();
+      await api.post("faults/", formData);
+      setDescription("");
+      setEquipmentId("");
+      setImageFile(null);
+      setShowReportForm(false);
+      loadFaults();
+    } catch (err) {
+      alert("Couldn't submit report. Please try again.");
+    } finally {
+      setSubmittingReport(false);
+    }
   };
 
   const handleAssign = async (faultId, technicianId) => {
@@ -160,8 +170,13 @@ export default function Dashboard() {
   };
 
   const handleVerify = async (technicianId) => {
-    await api.patch(`technicians/${technicianId}/verify/`);
-    loadTechnicians();
+    setVerifyingId(technicianId);
+    try {
+      await api.patch(`technicians/${technicianId}/verify/`);
+      loadTechnicians();
+    } finally {
+      setVerifyingId(null);
+    }
   };
 
   return (
@@ -311,12 +326,14 @@ export default function Dashboard() {
                     {t.is_verified ? "Verified" : "Pending"}
                   </span>
                   {!t.is_verified && (
-                    <button
+                    <LoadingButton
                       className="dash-logout"
+                      loading={verifyingId === t.id}
+                      loadingText="..."
                       onClick={() => handleVerify(t.id)}
                     >
                       Verify
-                    </button>
+                    </LoadingButton>
                   )}
                 </div>
               </div>
@@ -385,9 +402,13 @@ export default function Dashboard() {
                     <option value="CRITICAL">Critical</option>
                   </select>
                 </div>
-                <button type="submit" className="auth-btn">
+                <LoadingButton
+                  type="submit"
+                  loading={submittingReport}
+                  loadingText="Submitting..."
+                >
                   Submit Report
-                </button>
+                </LoadingButton>
               </form>
             </div>
           </div>
