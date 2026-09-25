@@ -6,6 +6,7 @@ export default function NavBar({
   onTechnicians,
   onLogout,
 }) {
+  console.log("NavBar user:", user);
   return (
     <nav className="app-nav">
       <div className="app-nav-inner">
