@@ -87,7 +87,6 @@ export default function AddEquipmentPanel({ locations, onCreated }) {
           value={form.condition}
           onChange={handleChange}
         >
-          <option value="OPERATIONAL">Operational</option>
           <option value="UNDER_MAINTENANCE">Under Maintenance</option>
           <option value="FAULTY">Faulty</option>
           <option value="DECOMMISSIONED">Decommissioned</option>

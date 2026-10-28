@@ -194,6 +194,9 @@ export default function Dashboard() {
             {user?.role === "TECHNICIAN" ? "My Assigned Jobs" : "Fault Reports"}
           </h1>
         </div>
+        {user?.role === "STUDENT" && user?.reg_number && (
+          <p className="dash-reg">Reg No: {user.reg_number}</p>
+        )}
       </div>
 
       <input

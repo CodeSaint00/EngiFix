@@ -17,6 +17,8 @@ export default function RegisterStudent() {
   const [showDeptDropdown, setShowDeptDropdown] = useState(false);
   const [addingDept, setAddingDept] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,6 +55,8 @@ export default function RegisterStudent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
     setErrors({});
 
     if (!departmentId) {
@@ -69,6 +73,7 @@ export default function RegisterStudent() {
       navigate("/login");
     } catch (err) {
       setErrors(err.response?.data || { detail: "Registration failed." });
+      setLoading(false);
     }
   };
 
@@ -175,13 +180,47 @@ export default function RegisterStudent() {
           </div>
           <div className="auth-field">
             <label>Password</label>
-            <input
-              className="auth-input"
-              name="password"
-              type="password"
-              onChange={handleChange}
-              required
-            />
+            <div className="auth-password-wrap">
+              <input
+                className="auth-input"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                className="auth-eye-btn"
+                onClick={() => setShowPassword((s) => !s)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                ) : (
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
 
           {Object.entries(errors).map(([field, msgs]) => (
@@ -190,8 +229,26 @@ export default function RegisterStudent() {
             </p>
           ))}
 
-          <button type="submit" className="auth-btn">
-            Register
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? (
+              <>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <path
+                    d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Registering...
+              </>
+            ) : (
+              "Register"
+            )}
           </button>
         </form>
 
