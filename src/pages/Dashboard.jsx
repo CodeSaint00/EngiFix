@@ -199,6 +199,8 @@ export default function Dashboard() {
         )}
       </div>
 
+      <br />
+      <br />
       <input
         className="dash-search"
         placeholder="Search reports..."
