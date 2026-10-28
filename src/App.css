@@ -182,35 +182,3 @@
     border-right-color: var(--border);
   }
 }
-.auth-password-wrap {
-  position: relative;
-}
-
-.auth-password-wrap .auth-input {
-  padding-right: 44px; /* room so text doesn't run under the icon */
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.auth-eye-btn {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.6);
-  display: flex;
-  align-items: center;
-}
-
-.auth-eye-btn:hover {
-  color: #2fa8ff;
-}
-
-.auth-eye-btn svg {
-  width: 20px;
-  height: 20px;
-}
