@@ -317,6 +317,10 @@ export default function Dashboard() {
                   ></span>
                   {f.status.replace("_", " ")}
                 </div>
+                <h3>{equipmentName(f.equipment)}</h3>
+                {f.location_name && (
+                  <p className="fault-location">📍 {f.location_name}</p>
+                )}
                 <p
                   style={{
                     fontSize: 11,
@@ -489,11 +493,14 @@ export default function Dashboard() {
                 {selectedFault.priority}
               </span>
               <h2>{equipmentName(selectedFault.equipment)}</h2>
-              <h3>{equipmentName(f.equipment)}</h3>
-              {f.location_name && (
-                <p className="fault-location">📍 {f.location_name}</p>
+              {selectedFault.location_name && (
+                <>
+                  <div className="modal-field-label">Location</div>
+                  <p style={{ marginTop: 0, marginBottom: 14 }}>
+                    {selectedFault.location_name}
+                  </p>
+                </>
               )}
-              <p>{f.description}</p>
               <p className="modal-meta">
                 Reported {formatTime(selectedFault.created_at)}
               </p>
