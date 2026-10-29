@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import AddEquipmentPanel from "../components/AddEquipmentPanel";
 import NavBar from "../components/NavBar";
 import LoadingButton from "../components/LoadingButton";
+import LocationPicker from "../components/LocationPicker";
 
 const STATUS_FILTERS_ALL = [
   "ALL",
@@ -62,6 +63,8 @@ export default function Dashboard() {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("MEDIUM");
   const [imageFile, setImageFile] = useState(null);
+
+  const [locationId, setLocationId] = useState("");
 
   const techniciansRef = useRef(null);
   const [showEquipmentModal, setShowEquipmentModal] = useState(false);
@@ -127,16 +130,22 @@ export default function Dashboard() {
     const q = search.toLowerCase();
     const matchesSearch =
       equipmentName(f.equipment).toLowerCase().includes(q) ||
-      f.description.toLowerCase().includes(q);
+      f.description.toLowerCase().includes(q) ||
+      (f.location_name || "").toLowerCase().includes(q);
     return matchesRole && matchesFilter && matchesSearch;
   });
 
   const handleSubmitReport = async (e) => {
     e.preventDefault();
+    if (!locationId) {
+      alert("Please choose a location or add a new one.");
+      return;
+    }
     setSubmittingReport(true);
     try {
       const formData = new FormData();
       formData.append("equipment", equipmentId);
+      formData.append("location", locationId);
       formData.append("description", description);
       formData.append("priority", priority);
       if (imageFile) formData.append("image", imageFile);
@@ -144,6 +153,7 @@ export default function Dashboard() {
       await api.post("faults/", formData);
       setDescription("");
       setEquipmentId("");
+      setLocationId("");
       setImageFile(null);
       setShowReportForm(false);
       loadFaults();
@@ -152,6 +162,17 @@ export default function Dashboard() {
     } finally {
       setSubmittingReport(false);
     }
+  };
+
+  const createLocation = async (name) => {
+    const [building, room = ""] = name.split(" - ").map((s) => s.trim());
+    const res = await api.post("locations/", {
+      building,
+      room,
+      department: user.department,
+    });
+    await loadLocations();
+    return res.data;
   };
 
   const handleAssign = async (faultId, technicianId) => {
@@ -391,11 +412,12 @@ export default function Dashboard() {
                   />
                 </div>
                 <div className="auth-field">
-                  <label>Photo (optional)</label>
+                  <label>Photo of faulty Equipment</label>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setImageFile(e.target.files[0])}
+                    required
                   />
                 </div>
                 <div className="auth-field">
@@ -410,6 +432,14 @@ export default function Dashboard() {
                     <option value="HIGH">High</option>
                     <option value="CRITICAL">Critical</option>
                   </select>
+                </div>
+                <div className="auth-field">
+                  <label>Location</label>
+                  <LocationPicker
+                    locations={locations}
+                    onChange={setLocationId}
+                    onCreate={createLocation}
+                  />
                 </div>
                 <LoadingButton
                   type="submit"
@@ -459,10 +489,24 @@ export default function Dashboard() {
                 {selectedFault.priority}
               </span>
               <h2>{equipmentName(selectedFault.equipment)}</h2>
+              <h3>{equipmentName(f.equipment)}</h3>
+              {f.location_name && (
+                <p className="fault-location">📍 {f.location_name}</p>
+              )}
+              <p>{f.description}</p>
               <p className="modal-meta">
                 Reported {formatTime(selectedFault.created_at)}
               </p>
               <p className="modal-desc">{selectedFault.description}</p>
+
+              {selectedFault.location_name && (
+                <>
+                  <div className="modal-field-label">Location</div>
+                  <p style={{ marginTop: 0, marginBottom: 14 }}>
+                    {selectedFault.location_name}
+                  </p>
+                </>
+              )}
 
               <hr className="modal-divider" />
 
@@ -549,7 +593,6 @@ export default function Dashboard() {
               </button>
               <h2 style={{ marginTop: 0 }}>Add Equipment</h2>
               <AddEquipmentPanel
-                locations={locations}
                 onCreated={() => {
                   loadEquipment();
                   setShowEquipmentModal(false);

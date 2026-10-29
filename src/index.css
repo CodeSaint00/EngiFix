@@ -900,3 +900,46 @@ select.auth-input option {
   color: rgba(255, 255, 255, 0.6);
   letter-spacing: 0.04em;
 }
+.fault-location {
+  margin: 4px 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+.picker-wrap {
+  position: relative;
+}
+
+.picker-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #0b1220;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.picker-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.picker-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.picker-add {
+  color: #2fa8ff;
+}

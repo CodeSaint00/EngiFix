@@ -16,8 +16,6 @@ export default function AddEquipmentPanel({ locations, onCreated }) {
     name: "",
     category: "",
     condition: "OPERATIONAL",
-    installed_date: "",
-    location: "",
   });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -87,42 +85,10 @@ export default function AddEquipmentPanel({ locations, onCreated }) {
           value={form.condition}
           onChange={handleChange}
         >
-          <option value="UNDER_MAINTENANCE">Under Maintenance</option>
           <option value="FAULTY">Faulty</option>
+          <option value="UNDER_MAINTENANCE">Under Maintenance</option>
           <option value="DECOMMISSIONED">Decommissioned</option>
         </select>
-      </div>
-
-      <div className="auth-field">
-        <label>Date &amp; Time</label>
-        <input
-          className="auth-input"
-          name="installed_date"
-          type="datetime-local"
-          value={form.installed_date}
-          onChange={handleChange}
-        />
-      </div>
-
-      <div className="auth-field">
-        <label>Location</label>
-        <input
-          className="auth-input"
-          name="location"
-          list="location-options"
-          placeholder="e.g. Engineering Block, Room 4"
-          value={form.location}
-          onChange={handleChange}
-          required
-        />
-        <datalist id="location-options">
-          {locations.map((loc) => (
-            <option
-              key={loc.id}
-              value={`${loc.building}${loc.room ? " - " + loc.room : ""}`}
-            />
-          ))}
-        </datalist>
       </div>
 
       {Object.entries(errors).map(([field, msgs]) => (
